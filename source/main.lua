@@ -110,24 +110,24 @@ local function update_tv_position_using_dpad()
 	end
 
 	if playdate.buttonIsPressed(playdate.kButtonLeft) then
-		tv_x, crank_anchor_x = update_crank_position(tv_x, crank_anchor_x + 2, 400 - tv_height)
+		tv_x, crank_anchor_x = update_crank_position(tv_x, crank_anchor_x + 2, 400 - tv_width)
 	end
 	if playdate.buttonIsPressed(playdate.kButtonRight) then
-		tv_x, crank_anchor_x = update_crank_position(tv_x, crank_anchor_x - 2, 400 - tv_height)
+		tv_x, crank_anchor_x = update_crank_position(tv_x, crank_anchor_x - 2, 400 - tv_width)
 	end
 end
 
 -- Check for hits against corners.
 local function check_horizontal_hit()
 	if dvd_vy < 0 and dvd_y <= tv_y + TV_TOP_BEZEL + SCORE_MARGIN then
-		if dvd_vx < 0 then
+		if dvd_x <= tv_x + TV_LEFT_BEZEL + SCORE_MARGIN then
 			table.insert(hits, {tv_x + TV_LEFT_BEZEL, tv_y + TV_TOP_BEZEL, HIT_TIMER})
 		else
 			table.insert(hits, {tv_x + tv_width - TV_RIGHT_BEZEL, tv_y + TV_TOP_BEZEL, HIT_TIMER})
 		end
 		score += 1
 	elseif dvd_vy > 0 and dvd_y + dvd_height >= tv_y + tv_height - TV_BOTTOM_BEZEL - SCORE_MARGIN then
-		if dvd_vx < 0 then
+		if dvd_x <= tv_x + TV_LEFT_BEZEL + SCORE_MARGIN then
 			table.insert(hits, {tv_x + TV_LEFT_BEZEL, tv_y + tv_height - TV_BOTTOM_BEZEL, HIT_TIMER})
 		else
 			table.insert(hits, {tv_x + tv_width - TV_RIGHT_BEZEL, tv_y + tv_height - TV_BOTTOM_BEZEL, HIT_TIMER})
@@ -138,14 +138,14 @@ end
 
 local function check_vertical_hit()
 	if dvd_vx < 0 and dvd_x <= tv_x + TV_LEFT_BEZEL + SCORE_MARGIN then
-		if dvd_vy < 0 then
+		if dvd_y <= tv_y + TV_TOP_BEZEL + SCORE_MARGIN then
 			table.insert(hits, {tv_x + TV_LEFT_BEZEL, tv_y + TV_TOP_BEZEL, HIT_TIMER})
 		else
 			table.insert(hits, {tv_x + TV_LEFT_BEZEL, tv_y + tv_height - TV_BOTTOM_BEZEL, HIT_TIMER})
 		end
 		score += 1
 	elseif dvd_vx > 0 and dvd_x + dvd_width >= tv_x + tv_width - TV_RIGHT_BEZEL - SCORE_MARGIN then
-		if dvd_vy < 0 then
+		if dvd_y <= tv_y + TV_TOP_BEZEL + SCORE_MARGIN then
 			table.insert(hits, {tv_x + tv_width - TV_RIGHT_BEZEL, tv_y + TV_TOP_BEZEL, HIT_TIMER})
 		else
 			table.insert(hits, {tv_x + tv_width - TV_RIGHT_BEZEL, tv_y + tv_height - TV_BOTTOM_BEZEL, HIT_TIMER})
