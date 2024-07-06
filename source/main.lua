@@ -7,9 +7,11 @@ https://eieio.games/game-diary/game-6-get-the-dvd-logo-into-the-corner/
 
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
-import "CoreLibs/ui"
 
 local gfx <const> = playdate.graphics
+
+-- Seed the random number generator.
+math.randomseed(playdate.getSecondsSinceEpoch())
 
 -- Initialize sprites, setting initial locations to center of screen.
 local tv = gfx.sprite.new(gfx.image.new("tv"))
@@ -58,6 +60,8 @@ local HIT_TIMER <const> = 20
 local move_horizontal = true
 
 -- If true, draw left/right arrows to indicate horizontal movement.
+-- If false, draw up/down arrows.
+--
 -- We need a separate state for this because reading buttonIsPressed before
 -- calling gfx.sprite.update() doesn't seem do what we wanted, so we have
 -- this separate variable that propagates the move_horizontal state that was
@@ -89,6 +93,8 @@ end
 -- Update TV position based on absolute crank position.
 --
 -- Note that it's based on absolute crank position as opposed to crank
+-- deltas.  This gives us better precision, and isn't prone to lost movements
+-- due to underflows.
 local function update_tv_position_using_crank()
 	local crank <const> = playdate.getCrankPosition()
 	if move_horizontal then
@@ -118,6 +124,14 @@ local function update_tv_position_using_dpad()
 end
 
 -- Check for hits against corners.
+--
+-- Note that not all the velocities are checked.  For example, once we have
+-- established that the logo touched either the left or right sides, we do
+-- not check the sign of dvd_vx to see if it made an actual bounce.  We
+-- could have added that check, but by not doing it, we enable a strategy
+-- where player can score multiple points by pushing the TV corner against
+-- the DVD logo just as the two are about to come into contact.  This seem
+-- to add bit more variety to the gameplay, so we have decided to keep it.
 local function check_horizontal_hit()
 	if dvd_vy < 0 and dvd_y <= tv_y + TV_TOP_BEZEL + SCORE_MARGIN then
 		if dvd_x <= tv_x + TV_LEFT_BEZEL + SCORE_MARGIN then

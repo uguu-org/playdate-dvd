@@ -2,5 +2,5 @@ name=Bouncing DVD
 author=uguu.org
 description=Get the DVD logo in the corner
 bundleID=org.uguu.dvd
-version=0.1
-buildNumber=2
+version=0.3
+buildNumber=3
